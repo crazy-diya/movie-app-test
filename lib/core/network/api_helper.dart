@@ -5,6 +5,7 @@ import 'package:dio/io.dart';
 import 'package:mock_movies_app/error/exception.dart';
 import 'package:mock_movies_app/features/domain/entities/error_response_entity.dart';
 
+import '../../utils/app_constants.dart';
 import 'network_config.dart';
 
 class APIHelper {
@@ -52,13 +53,15 @@ class APIHelper {
 
   Future<dynamic> post(T) async {}
 
-  Future<dynamic> get(Map<String, dynamic> param) async {
+  Future<dynamic> get(String tag, {Map<String, dynamic>? param}) async {
+    dio.options.headers['Authorization'] =
+    "Bearer ${AppConstants.accessToken}";
     try {
       final response = await dio.get(
-        NetworkConfig.getNetworkConfig(),
+        NetworkConfig.getNetworkConfig() + tag,
         queryParameters: param,
       );
-      return response;
+      return response.data;
     } on DioException catch (error) {
       throw DioExceptionError(
         errorResponse: ErrorResponseEntity(

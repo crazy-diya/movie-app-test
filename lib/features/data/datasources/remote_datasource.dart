@@ -1,7 +1,9 @@
 import 'package:mock_movies_app/core/network/api_helper.dart';
+import 'package:mock_movies_app/features/data/model/movie_list_response.dart';
 
 abstract class RemoteDatasource {
-  Future<dynamic> splashRequest(Map<String, dynamic> data);
+  Future<MovieListResponse> movieList(Map<String, dynamic> query);
+  Future<MovieListResponse> topMovieList(Map<String, dynamic> query);
 }
 
 class RemoteDatasourceImpl extends RemoteDatasource {
@@ -10,11 +12,26 @@ class RemoteDatasourceImpl extends RemoteDatasource {
   RemoteDatasourceImpl({required this.apiHelper});
 
   @override
-  Future<dynamic> splashRequest(Map<String, dynamic> data) async {
+  Future<MovieListResponse> movieList(Map<String, dynamic> query) async {
     try {
-      final response = await apiHelper.get({"b": "", "a": ""});
-      return response;
-      /**Here you can use Model class cast things from json to object*/
+      final response = await apiHelper.get(
+        "discover/movie",
+        param: query,
+      );
+      return MovieListResponse.fromJson(response);
+    } on Exception {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<MovieListResponse> topMovieList(Map<String, dynamic> query) async {
+    try {
+      final response = await apiHelper.get(
+        "discover/movie",
+        param: query,
+      );
+      return MovieListResponse.fromJson(response);
     } on Exception {
       rethrow;
     }

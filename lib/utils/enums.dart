@@ -1,4 +1,6 @@
 enum ButtonType {
-  ENABLED,
-  DISABLED,
+  HOME,
+  MOVIE,
+  SERIES,
+  DRAMA,
 }

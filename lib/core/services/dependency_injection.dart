@@ -6,8 +6,10 @@ import 'package:mock_movies_app/core/network/network_info.dart';
 import 'package:mock_movies_app/features/data/datasources/remote_datasource.dart';
 import 'package:mock_movies_app/features/data/repository/repository_impl.dart';
 import 'package:mock_movies_app/features/domain/repository/repository.dart';
-import 'package:mock_movies_app/features/domain/usecases/splash_usecase.dart';
-import 'package:mock_movies_app/features/presentation/bloc/splash/splash_cubit.dart';
+import 'package:mock_movies_app/features/domain/usecases/movie_list_usecase.dart';
+
+import '../../features/domain/usecases/top_movie_list_usecase.dart';
+import '../../features/presentation/cubit/movie_list/movie_list_cubit.dart';
 
 final injection = GetIt.instance;
 
@@ -25,8 +27,16 @@ Future<dynamic> init() async {
       .registerLazySingleton<Repository>(() => RepositoryImpl(remoteDatasource: injection(), networkInfo: injection()));
 
   //UseCase
-  injection.registerLazySingleton(() => Splash(repository: injection()));
+  injection.registerLazySingleton(() => MovieListUseCase(repository: injection()));
+  injection.registerLazySingleton(() => TopMovieListUseCase(repository: injection()));
 
   //Bloc
-  injection.registerFactory(() => SplashCubit(splash: injection()));
+  injection.registerFactory(
+    () => MovieListCubit(
+      popularMovieListUseCase: injection(),
+      topRatedMovieListUseCase: injection(),
+      upcomingMovieListUseCase: injection(),
+      newMovieListUseCase: injection(),
+    ),
+  );
 }
